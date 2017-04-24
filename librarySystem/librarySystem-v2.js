@@ -23,9 +23,12 @@
 	} 
 	
 	function loadLibrary(name) {
-		
 		var libDependencies = [];
 		var library = libraryStorage[name];
+		
+		if (library === undefined) {
+			throw new Error('Failed to load ' + name + '. Register a library before loading.');	
+		}
 		
 		if (library.isRun) {
 			return library.value;

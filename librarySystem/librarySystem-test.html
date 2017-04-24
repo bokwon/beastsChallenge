@@ -12,7 +12,7 @@
 
 						eq('yoga', librarySystem('hobby1'));
 				},
-				'librarySystem should be able to create a library with one or more dependency.': function() {
+				'librarySystem should be able to create a library with one or more dependencies.': function() {
 						librarySystem('firstName', [], function() {
 							return 'Bo';
 						});
@@ -84,6 +84,18 @@
 						librarySystem('app', [], function() {
 							return 'app is loaded';
 						});
+					} catch(e) {
+						isError = (e instanceof Error);
+					}
+					
+					eq(isError, true);
+					libraryReset();
+				},
+				'librarySystem should throw an error when there is an attempt to load non-existing library.': function() {
+					var isError = false;
+					
+					try {
+						librarySystem('app');
 					} catch(e) {
 						isError = (e instanceof Error);
 					}
