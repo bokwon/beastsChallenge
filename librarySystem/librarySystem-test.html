@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="simpletest.js"></script>
+		<script src="librarySystem-v2.js"></script>
+		<script>
+			tests({
+				'librarySystem should be able to create a library without dependency.': function() {
+						librarySystem('hobby1', [], function() {
+							return 'yoga';
+						});
+
+						eq('yoga', librarySystem('hobby1'));
+				},
+				'librarySystem should be able to create a library with one or more dependency.': function() {
+						librarySystem('firstName', [], function() {
+							return 'Bo';
+						});
+
+						librarySystem('lastName', [], function() {
+							return 'Kwon';
+						});
+
+						librarySystem('fullName', ['firstName', 'lastName'], function(firstName, lastName) {
+							return 'My full name is ' + firstName + ' ' + lastName;
+						});
+
+						eq('My full name is Bo Kwon', librarySystem('fullName'));
+				},
+				'librarySystem should be able to create libraries out of order.': function() {
+						librarySystem('workBlurb', ['name', 'company'], function(name, company) {
+							return name + ' works at ' + company;
+						});
+
+						librarySystem('name', [], function() {
+							return 'Gordon';
+						});
+
+						librarySystem('company', [], function() {
+							return 'Watch and Code';
+						});
+
+						eq('Gordon works at Watch and Code', librarySystem('workBlurb'));
+
+						libraryReset();
+				},
+				'librarySystem should only run once.': function() {
+						var timesCallbackRun = 0;
+						librarySystem('hobby2', [], function() {
+							timesCallbackRun++;
+							return 'playing a piano';
+						});
+
+						librarySystem('hobby2');
+						librarySystem('hobby2');
+
+						eq(timesCallbackRun, 1);
+
+						var timesDependepencyCallbackRun = 0;
+
+						librarySystem('workBlurb', ['name', 'company'], function(name, company) {
+							return name + ' works at ' + company;
+						});
+
+						librarySystem('name', [], function() {
+							timesDependepencyCallbackRun++;
+							return 'Gordon';
+						});
+
+						librarySystem('name');
+						librarySystem('name');
+						librarySystem('name');
+
+						eq(timesDependepencyCallbackRun, 1);
+				}, 
+				'librarySystem should throw an error when there is an attempt to register existing library.': function() {
+					var isError = false;
+					
+					librarySystem('app', [], function() {
+						return 'app is loaded';
+					});
+					
+					try {
+						librarySystem('app', [], function() {
+							return 'app is loaded';
+						});
+					} catch(e) {
+						isError = (e instanceof Error);
+					}
+					
+					eq(isError, true);
+					libraryReset();
+				},
+				'librarySystem should handle multiple levels of nested dependencies.': function() {
+					librarySystem('app', ['app1'], function(app1) {
+						return 'app should load with ' + app1;
+					});
+					
+					librarySystem('app1', ['app2'], function(app2) {
+						return 'app1 has ' + app2;
+					});
+					
+					librarySystem('app2', [], function(app2) {
+						return 'app2';
+					});
+					
+					eq('app should load with app1 has app2', librarySystem('app'));
+				}
+			});
+		</script>
+	</head>
+	<body></body>
+</html>
+
