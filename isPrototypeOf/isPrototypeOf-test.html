@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="simpletest.js"></script>
+		<script src="isPrototypeOf.js"></script>
+		<script>
+			tests({
+				'It should return true if the object exists within another object prototype chain.': function() {
+					var canine = {
+						bark: function() {
+							console.log('bark');
+						}
+					};
+					var dog = Object.create(canine);
+					dog.fetch = function() {
+						console.log('fetch');
+					};
+					var myDog = Object.create(dog);
+					
+					eq(isPrototypeOf(dog, myDog), true);
+					eq(isPrototypeOf(canine, myDog), true);
+					eq(isPrototypeOf(Object.prototype, myDog), true);
+				},
+				'It should return true if the object exists whithin construcutor function prototype chain.': function() {
+					function Foo() {};
+					function Bar() {};
+					function Baz() {};
+					
+					Bar.prototype = Object.create(Foo.prototype);
+					Baz.prototype = Object.create(Bar.prototype);
+					
+					var baz = new Baz();
+					
+					eq(isPrototypeOf(Baz.prototype, baz), true);
+					eq(isPrototypeOf(Bar.prototype, baz), true);
+					eq(isPrototypeOf(Foo.prototype, baz), true);
+					eq(isPrototypeOf(Object.prototype, baz), true);
+				},
+				'It should return false if the object does not exist within another object prototype chain.': function() {
+					var dog = {
+					  bark: function() {
+						console.log('bark');
+					  }
+					};
+					var empty = Object.create(null);
+					
+					eq(isPrototypeOf(dog, empty), false);
+				},
+				'If prototypeObj is undefined or null, throw TypeError.' : function() {
+					var dog = {
+						bark: function() {
+							console.log('bark');
+						}
+					};
+					var myDog = Object.create(dog);
+					var isTypeError = false;
+					var prototypeObj;
+					
+					try {
+						isPrototypeOf(prototypeObj, myDog);
+					} catch(e) {
+						isTypeError = (e instanceof TypeError);
+					}
+					
+					eq(isTypeError, true);
+				}
+			});
+		</script>
+	</head>
+	<body></body>
+</html>
