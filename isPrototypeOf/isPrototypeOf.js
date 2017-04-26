@@ -9,7 +9,7 @@ function isPrototypeOf(prototypeObj, object) {
 		return false;
 	}
 	
-	prototype = Object.getPrototypeOf(object)
+	prototype = Object.getPrototypeOf(object);
 
 	if (prototype === prototypeObj) {
 		return true;
