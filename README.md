@@ -2,3 +2,5 @@
 
 #### librarySystem
 	beasts challenge #4
+#### isPrototypeOf
+	beasts challenge #5
