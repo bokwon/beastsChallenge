@@ -75,7 +75,7 @@ var TinyTest = {
                 
             }
         }
-        setTimeout(function() { // Give document a chance to complete
+        setTimeout(function() {
             if (window.document && document.body) {
                 document.body.style.backgroundColor = (failures == 0 ? '#99ff99' : '#ff9999');
             }
@@ -111,6 +111,6 @@ var TinyTest = {
 var fail               = TinyTest.fail.bind(TinyTest),
     assert             = TinyTest.assert.bind(TinyTest),
     assertEquals       = TinyTest.assertEquals.bind(TinyTest),
-    eq                 = TinyTest.assertEquals.bind(TinyTest), // alias for assertEquals
+    eq                 = TinyTest.assertEquals.bind(TinyTest),
     assertStrictEquals = TinyTest.assertStrictEquals.bind(TinyTest),
     tests              = TinyTest.run.bind(TinyTest);
