@@ -5,13 +5,79 @@
 		<script src="toFixed.js"></script>
 		<script>
 			tests({
-				'toFixed test': function() {
-					fail();
+				'It should throw a RangeError when the optional second argument is not between 0 and 20.': function() {
+					var isRangeError = false;
+					
+					try {
+						toFixed(200);
+					} catch(e) {
+						isRangeError = (e instanceof RangeError);		
+					}
+					
+					eq(isRangeError, true);
+					
+					isRangeError = false;
+					
+					try {
+						toFixed(2.34, 200);
+					} catch(e) {
+						isRangeError = (e instanceof RangeError);		
+					}
+					
+					eq(isRangeError, true);
+				},
+				'It should throw a TypeError when the method is invoked on an object that is not a Number.': function() {
+					var isTypeError = false;
+					
+					try {
+						toFixed("isNotaNumber");
+					} catch(e) {
+						isTypeError = (e instanceof TypeError);
+					}
+					
+					eq(isTypeError, true);
+					
+					isTypeError = false;
+					
+					try {
+						toFixed("isNotaNumber", 2);
+					} catch(e) {
+						isTypeError = (e instanceof TypeError);
+					}
+					
+					eq(isTypeError, true);
+				},
+				'It should return a string representation of numObj that does not use exponential notation.': function() {
+					var result;
+					
+					result = toFixed(1.23e+20, 2);
+					
+					eq(typeof result, 'string');
+					eq(result, '123000000000000000000.00');
+				},
+				'It should add zeros for the fractional part so that the number has the specified length.': function() {
+					eq(toFixed(2, 2), '2.00');
+				},
+				'It should round numObj if necessary.': function() {
+					eq(toFixed(10.235, 2), '10.24');
+					eq(toFixed(0.615, 2), '0.62');
+					eq(toFixed(1.005, 2), '1.01');
+				},
+				'If the second argument is omitted, it should be treated as 0.': function() {
+					var numObj = 12345.6789;
+					var result;
+					
+					result = toFixed(numObj);
+					
+					eq(result, '12346');
 				}
-				
 			})
 		</script>
 	</head>
 	<body>
 	</body>
 </html>
+
+<!--
+RangeError - if digits is too small or too large (support 0 and 20, inclusive)
+TypeError - if this method is invoked on an object that is not a Number.-->
