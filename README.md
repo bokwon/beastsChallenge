@@ -4,3 +4,5 @@
 	beasts challenge #4
 #### isPrototypeOf
 	beasts challenge #5
+#### toFixed
+	beasts challenge #6
