@@ -1,9 +1,10 @@
 function toFixed(numObj, digits) {
-	var result;
 	var numStr = numObj.toString();
-	var decimalPoint = numStr.indexOf('.');
-	var roundIndex;
+	var curDecimalPoint = numStr.indexOf('.');
+	var newDecimalPoint;
+	var roundValueIndex;
 	var roundedValue;
+	var result;
 	
 	if (typeof numObj !== 'number') {
 		throw new TypeError("It should pass number object for the first argument.");
@@ -14,30 +15,29 @@ function toFixed(numObj, digits) {
 	}
 	
 	if (digits) {
-		if (decimalPoint > 0) {
-			roundIndex = decimalPoint+digits+1;
-			
-			if (numStr[roundIndex]) {
-				if (Number(numStr[roundIndex]) >= 5) {
-					roundedValue = Number(numStr.substr(decimalPoint+digits, 1)) + 1;
-					result = numStr.substr(0, decimalPoint) + numStr.substr(decimalPoint, digits) + roundedValue.toString();
-				} 
+		newDecimalPoint = curDecimalPoint + digits;
+		roundValueIndex = newDecimalPoint + 1;
+		
+		if (curDecimalPoint > 0) { 
+			if (numStr[roundValueIndex] && Number(numStr[roundValueIndex]) >= 5 ) {
+				roundedValue = Number(numStr.substr(newDecimalPoint, 1)) + 1;
+				result = numStr.substr(0, curDecimalPoint) + numStr.substr(curDecimalPoint, digits) + roundedValue.toString();
 			} else {
-				result = numStr + addZeros(roundIndex-digits+1);	
-			}
-			
+				result = numStr + addZeros(roundValueIndex-digits+1);
+			}			
 		} else {
 			result = numStr + '.' + addZeros(digits);
 		}
 	} else {
-		if (decimalPoint > 0) {
-			roundIndex = decimalPoint+1;
-			
-			if (Number(numStr[roundIndex]) >= 5) {
-				roundedValue = Number(numStr.substr(decimalPoint-1, 1)) + 1;
-				result = numStr.substr(0, decimalPoint-1) + roundedValue.toString();
+		newDecimalPoint = curDecimalPoint - 1;
+		roundValueIndex = curDecimalPoint + 1;
+		
+		if (curDecimalPoint > 0) {
+			if (numStr[roundValueIndex] && Number(numStr[roundValueIndex]) >= 5) {
+				roundedValue = Number(numStr.substr(newDecimalPoint, 1)) + 1;
+				result = numStr.substr(0, newDecimalPoint) + roundedValue.toString();
 			} else {
-				result = numStr.substr(0, decimalPoint);
+				result = numStr.substr(0, curDecimalPoint);
 			}
 		}	else {
 			result = numStr;
